@@ -18,7 +18,8 @@ class SearchResult(BaseModel):
     description: str = Field(description="Article description or summary")
     tags: list[str] = Field(description="Topic tags assigned to the article")
     relevance_score: float = Field(description="TF-IDF cosine similarity score, range 0.0 to 1.0 (higher is more relevant)")
-    eeat_avg: float = Field(description="Average EEAT quality score across 13 signals (expertise, experience, authority, trust)")
+    quality_score: float = Field(description="Build-time quality score, unbounded weighted composite across 13 signals from the editorial pipeline (style-aware, higher is better; thresholds depend on style)")
+    quality_style: str = Field(default="", description="Editorial style category (e.g. 'best_practice_learnings', 'werthaltige_code_beispiele', 'conclusion', 'smart_infotainment'). Empty if not categorised.")
 
 
 def search_blog(
@@ -71,7 +72,8 @@ def search_blog(
             description=a.get("description", ""),
             tags=a.get("tags", []),
             relevance_score=round(score, 4),
-            eeat_avg=a.get("eeat_avg", 0.0),
+            quality_score=a.get("quality_score", 0.0),
+            quality_style=a.get("quality_style", ""),
         ))
 
     return results

@@ -16,8 +16,9 @@ class Article(BaseModel):
     tags: list[str] = Field(default_factory=list, description="Topic tags assigned to the article")
     description: str = Field(default="", description="Short article description")
     body: str = Field(default="", description="Full article body in Markdown")
-    eeat: dict = Field(default_factory=dict, description="EEAT score breakdown by signal")
-    eeat_avg: float = Field(default=0.0, description="Average EEAT score across all signals")
+    quality_score: float = Field(default=0.0, description="Build-time quality score from the editorial pipeline (unbounded weighted composite across 13 signals, higher is better; thresholds depend on style)")
+    quality_style: str = Field(default="", description="Editorial style category (e.g. 'best_practice_learnings', 'werthaltige_code_beispiele'). Empty if not categorised.")
+    quality_class: str = Field(default="", description="Editorial content class (e.g. 'Ephemeral', 'Evergreen'). Empty if not classified.")
     word_count: int = Field(default=0, description="Word count of the article body")
     error: Optional[str] = Field(default=None, description="Set to 'article_not_found' if no article matches the slug")
 
@@ -44,7 +45,8 @@ def get_article(
         tags=article.get("tags", []),
         description=article.get("description", ""),
         body=article.get("body", ""),
-        eeat=article.get("eeat", {}),
-        eeat_avg=article.get("eeat_avg", 0.0),
+        quality_score=article.get("quality_score", 0.0),
+        quality_style=article.get("quality_style", ""),
+        quality_class=article.get("quality_class", ""),
         word_count=article.get("word_count", 0),
     )
