@@ -1,0 +1,15 @@
+[Unit]
+Description=Sovereign AI MCP Server
+After=network.target
+
+[Service]
+Type=simple
+User=cipherfox
+WorkingDirectory=/data/projects/sovereign-mcp
+ExecStart=/data/projects/sovereign-mcp/.venv/bin/uvicorn src.main:app --host 127.0.0.1 --port 8002 --workers 1
+Restart=on-failure
+RestartSec=5
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target
