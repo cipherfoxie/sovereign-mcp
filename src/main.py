@@ -8,6 +8,7 @@ Health endpoint: GET /health (custom Starlette route added to the app)
 import json
 from mcp.server.fastmcp import FastMCP
 from mcp.server.transport_security import TransportSecuritySettings
+from mcp.types import ToolAnnotations
 from starlette.requests import Request
 from starlette.responses import JSONResponse
 from starlette.routing import Route
@@ -46,9 +47,30 @@ mcp = FastMCP(
     ),
 )
 
-mcp.tool()(search_blog)
-mcp.tool()(get_article)
-mcp.tool()(diagnose_sglang)
+# Pure read-only / deterministic tools.
+# readOnlyHint:    no side effects on any system
+# idempotentHint:  same input always yields the same output
+# openWorldHint:   tool does NOT touch external systems beyond a fixed local KB
+mcp.tool(annotations=ToolAnnotations(
+    title="Search Blog",
+    readOnlyHint=True,
+    idempotentHint=True,
+    openWorldHint=False,
+))(search_blog)
+
+mcp.tool(annotations=ToolAnnotations(
+    title="Get Article",
+    readOnlyHint=True,
+    idempotentHint=True,
+    openWorldHint=False,
+))(get_article)
+
+mcp.tool(annotations=ToolAnnotations(
+    title="Diagnose SGLang Config",
+    readOnlyHint=True,
+    idempotentHint=True,
+    openWorldHint=False,
+))(diagnose_sglang)
 
 
 async def health_endpoint(request: Request) -> JSONResponse:

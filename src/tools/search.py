@@ -1,28 +1,42 @@
 """
-search.py — TF-IDF blog search tool.
+search.py - TF-IDF blog search tool.
 """
 
+from typing import Annotated
+from pydantic import BaseModel, Field
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import numpy as np
 from .. import knowledge
 
 
-def search_blog(query: str, n: int = 5) -> list[dict]:
-    """
-    Search the Sovereign AI Blog for articles matching the query.
-    Returns up to n results with title, url, description, and EEAT scores.
+class SearchResult(BaseModel):
+    """One ranked article result from search_blog."""
+    slug: str = Field(description="Article slug, use as input to get_article")
+    title: str = Field(description="Article title")
+    url: str = Field(description="Public URL of the article")
+    description: str = Field(description="Article description or summary")
+    tags: list[str] = Field(description="Topic tags assigned to the article")
+    relevance_score: float = Field(description="TF-IDF cosine similarity score, range 0.0 to 1.0 (higher is more relevant)")
+    eeat_avg: float = Field(description="Average EEAT quality score across 13 signals (expertise, experience, authority, trust)")
 
-    Args:
-        query: Natural language search query
-        n: Maximum number of results (default 5, max 10)
+
+def search_blog(
+    query: Annotated[str, Field(description="Natural language search query (e.g. 'flashinfer OOM on GB10'). Multi-word queries are tokenized and TF-IDF ranked.")],
+    n: Annotated[int, Field(description="Maximum number of results to return", ge=1, le=10)] = 5,
+) -> list[SearchResult]:
+    """
+    Search the Sovereign AI Blog for articles matching a natural language query.
+
+    Uses TF-IDF over title, description, tags, and the first 500 chars of body.
+    Returns up to n results ranked by cosine similarity. Pure read-only operation,
+    deterministic for a given knowledge base snapshot.
     """
     n = min(max(1, n), 10)
     articles = knowledge.get_articles()
     if not articles:
         return []
 
-    # Build corpus: title + description + tags + body excerpt (first 500 chars)
     corpus = []
     for a in articles:
         body_excerpt = a.get("body", "")[:500]
@@ -44,21 +58,20 @@ def search_blog(query: str, n: int = 5) -> list[dict]:
     scores = cosine_similarity(query_vec, tfidf_matrix).flatten()
     top_indices = np.argsort(scores)[::-1][:n]
 
-    results = []
+    results: list[SearchResult] = []
     for idx in top_indices:
         score = float(scores[idx])
         if score < 0.001:
             continue
         a = articles[idx]
-        eeat = a.get("eeat", {})
-        results.append({
-            "slug": a["slug"],
-            "title": a["title"],
-            "url": a["url"],
-            "description": a.get("description", ""),
-            "tags": a.get("tags", []),
-            "relevance_score": round(score, 4),
-            "eeat_avg": a.get("eeat_avg", 0.0),
-        })
+        results.append(SearchResult(
+            slug=a["slug"],
+            title=a["title"],
+            url=a["url"],
+            description=a.get("description", ""),
+            tags=a.get("tags", []),
+            relevance_score=round(score, 4),
+            eeat_avg=a.get("eeat_avg", 0.0),
+        ))
 
     return results
