@@ -17,6 +17,7 @@ from . import knowledge
 from .tools.search import search_blog
 from .tools.article import get_article
 from .tools.diagnose import diagnose_sglang
+from .tools.tags import list_tags
 
 # ── MCP Server ────────────────────────────────────────────────────────────────
 # DNS rebinding protection: server binds to 127.0.0.1 inside Docker, only
@@ -71,6 +72,13 @@ mcp.tool(annotations=ToolAnnotations(
     idempotentHint=True,
     openWorldHint=False,
 ))(diagnose_sglang)
+
+mcp.tool(annotations=ToolAnnotations(
+    title="List Tags",
+    readOnlyHint=True,
+    idempotentHint=True,
+    openWorldHint=False,
+))(list_tags)
 
 
 async def health_endpoint(request: Request) -> JSONResponse:
