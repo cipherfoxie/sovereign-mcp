@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Content: CC BY-SA 4.0](https://img.shields.io/badge/Content-CC%20BY--SA%204.0-blue.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![smithery badge](https://smithery.ai/badge/cipherfoxie/sovereign-mcp)](https://smithery.ai/servers/cipherfoxie/sovereign-mcp)
+[![Glama MCP server](https://glama.ai/mcp/servers/cipherfoxie/sovereign-mcp/badges/score.svg)](https://glama.ai/mcp/servers/cipherfoxie/sovereign-mcp)
 
 MCP server exposing the [Sovereign AI Blog](https://sovgrid.org) to AI agents. The blog is a hands-on engineering log of self-hosted AI on NVIDIA DGX Spark (GB10/SM121A).
 
