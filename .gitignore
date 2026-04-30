@@ -8,8 +8,10 @@ __pycache__/
 .venv/
 venv/
 
-# Generated knowledge base (regenerate from sovereign-blog source)
-data/knowledge-base.json
+# Generated knowledge base is rebuilt from blog source on every deploy.
+# A small placeholder copy is committed so containers (Glama, local docker build)
+# can start the server for introspection without the full corpus. Do not remove
+# the placeholder, but do not commit real data over it either.
 
 # OS / editor
 .DS_Store

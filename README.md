@@ -51,18 +51,25 @@ Add to your client's MCP server config:
 
 ## Run locally
 
+### From source (uv)
+
 ```bash
 git clone https://github.com/cipherfoxie/sovereign-mcp.git
 cd sovereign-mcp
 uv sync
-# Generate the knowledge base (requires sovereign-blog source, see comment below)
-# python scripts/generate_knowledge_base.py
 uv run uvicorn src.main:app --host 127.0.0.1 --port 8002
 ```
 
-The `data/knowledge-base.json` file is gitignored because it's regenerated from the blog source. If you don't have access to that, you can either:
-- Use the live endpoint at `https://mcp.sovgrid.org/self-hosted-ai`
-- Build your own knowledge base with the same shape (see `src/knowledge.py` for the expected schema)
+### Docker
+
+```bash
+git clone https://github.com/cipherfoxie/sovereign-mcp.git
+cd sovereign-mcp
+docker build -t sovereign-mcp .
+docker run -p 8002:8002 sovereign-mcp
+```
+
+The repo ships a placeholder `data/knowledge-base.json` (zero articles, valid schema) so the server starts and answers MCP introspection cleanly out-of-the-box. To populate it with real content, generate from the [sovgrid.org blog source](https://github.com/cipherfoxie/sovereign-blog) using `scripts/generate_knowledge_base.py`, or build your own KB matching the schema in `src/knowledge.py`. Or just use the live endpoint at `https://mcp.sovgrid.org/self-hosted-ai`.
 
 ## Architecture
 
