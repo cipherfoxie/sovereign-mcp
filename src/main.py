@@ -26,10 +26,12 @@ from .tools.tags import list_tags
 mcp = FastMCP(
     name="sovereign-ai-blog",
     instructions=(
-        "Search and retrieve articles from the Sovereign AI Blog — "
-        "a practical engineering log of self-hosted AI on NVIDIA DGX Spark. "
-        "Use search_blog to find articles, get_article for full content, "
-        "and diagnose_sglang to validate SGLang configs for GB10/SM121A hardware."
+        "Search and retrieve articles from the Sovereign AI Blog, a practical "
+        "engineering log of self-hosted AI on NVIDIA DGX Spark. "
+        "Use list_tags to discover topic categories, search_blog to find "
+        "articles (with optional tag filter and date_desc sort), get_article "
+        "for full content by slug, and diagnose_sglang to validate SGLang "
+        "configs for GB10/SM121A hardware."
     ),
     streamable_http_path="/self-hosted-ai",
     transport_security=TransportSecuritySettings(
