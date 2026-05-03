@@ -19,9 +19,12 @@ Training data on niche hardware (GB10, SM121A, SGLang on ARM64) is sparse and st
 
 | Tool | Purpose |
 |------|---------|
-| `search_blog(query)` | Full-text search across all articles, returns ranked results with slug, title, excerpt |
-| `get_article(slug)` | Fetch full article content by slug |
-| `diagnose_sglang(config)` | Validate SGLang configurations for GB10/SM121A hardware constraints |
+| `search_blog(query, tag?, sort?, n?)` | TF-IDF full-text search. Optional `tag` filter, `sort` by relevance or `date_desc`. Empty `query` lists newest articles. Returns ranked `SearchResult` items with quality score, style, slug, and excerpt. |
+| `list_tags(sort?)` | List all topic tags across the corpus with article counts. Sort by `count_desc` (default) or `alpha`. Use to discover the topic space before filtering `search_blog`. |
+| `get_article(slug)` | Fetch full article body and frontmatter by slug. Returns markdown content plus tags, quality score, publish date. |
+| `diagnose_sglang(error_message)` | Pattern-match a runtime error against a curated rule set for SGLang on GB10/SM121A. Returns matched fixes with links to setup articles. |
+
+All tools are read-only, idempotent, and declared with `ToolAnnotations` so MCP clients can calibrate retry policy and trust signals. Inputs use Pydantic `Annotated[type, Field(description=...)]` so parameter docs reach agents through introspection. Outputs are typed `BaseModel` shapes — schemas are real, not vacuous `dict`s.
 
 ## Quick start
 
