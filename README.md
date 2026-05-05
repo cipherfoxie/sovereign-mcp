@@ -13,7 +13,9 @@ MCP server exposing the [Sovereign AI Blog](https://sovgrid.org) to AI agents. T
 
 ## Why use it
 
-Training data on niche hardware (GB10, SM121A, SGLang on ARM64) is sparse and stale. This MCP gives agents direct, structured access to 44+ articles documenting actual setups, fixes, and benchmarks. If you're building or debugging on similar stacks, your agent can pull verified, version-current information instead of hallucinating.
+Training data on niche hardware (GB10, SM121A, SGLang on ARM64) is sparse and stale. This MCP gives agents direct, structured access to 60+ articles documenting actual setups, fixes, and benchmarks. If you're building or debugging on similar stacks, your agent can pull verified, version-current information instead of hallucinating.
+
+The corpus covers SGLang and vLLM patches for GB10, voxtral and TTS pipelines on ARM64, KV-cache and quantization tradeoffs, podcast-grade audio generation, MCP server design, knowledge-base construction, and the operational side of running it all on a hardened European VPS.
 
 ## Tools
 
@@ -74,6 +76,8 @@ docker run -p 8002:8002 sovereign-mcp
 ```
 
 The repo ships a placeholder `data/knowledge-base.json` (zero articles, valid schema) so the server starts and answers MCP introspection cleanly out-of-the-box. To populate it with real content, generate from the [sovgrid.org blog source](https://github.com/cipherfoxie/sovereign-blog) using `scripts/generate_knowledge_base.py`, or build your own KB matching the schema in `src/knowledge.py`. Or just use the live endpoint at `https://mcp.sovgrid.org/self-hosted-ai`.
+
+A walk-through of the same KB pattern (Markdown plus JSON index, no vector store) is documented in [Build a Self-Hosted Knowledge Base with Plain Text and LLMs](https://sovgrid.org/setup-knowledge-base/).
 
 ## Architecture
 
