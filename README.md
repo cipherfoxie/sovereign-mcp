@@ -1,5 +1,6 @@
 # Sovereign AI MCP
 
+[![CI](https://github.com/cipherfoxie/sovereign-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/cipherfoxie/sovereign-mcp/actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Content: CC BY-SA 4.0](https://img.shields.io/badge/Content-CC%20BY--SA%204.0-blue.svg)](https://creativecommons.org/licenses/by-sa/4.0/)
 [![MCP Registry](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.modelcontextprotocol.io%2Fv0%2Fservers%3Fsearch%3Dsovgrid&query=%24.servers%5B0%5D.server.version&label=MCP%20Registry&color=1f6feb&prefix=v)](https://registry.modelcontextprotocol.io/v0/servers?search=sovgrid)
