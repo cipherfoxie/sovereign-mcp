@@ -68,10 +68,20 @@ def test_diagnose_no_input():
 
 @pytest.fixture
 def kb_available():
+    """Skip tests that need real content if the KB is missing or the
+    repo-shipped placeholder (zero articles, schema-valid). CI runs
+    against the placeholder; the real KB lives in the operator's deploy."""
+    import json
     from pathlib import Path
     kb = Path(__file__).parent.parent / "data" / "knowledge-base.json"
     if not kb.exists():
         pytest.skip("knowledge-base.json not found")
+    try:
+        data = json.loads(kb.read_text())
+    except (json.JSONDecodeError, OSError):
+        pytest.skip("knowledge-base.json not parseable")
+    if not data.get("articles"):
+        pytest.skip("knowledge-base.json has no articles (placeholder)")
 
 
 def test_search_returns_results(kb_available):
