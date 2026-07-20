@@ -16,7 +16,7 @@ def _article_url(slug: str) -> str:
 
 def _urls() -> tuple[str, str, str]:
     return (
-        _article_url("setup-mistral-sglang-setup"),
+        _article_url("setup-llm-inference-setup"),
         _article_url("fixes-sglang-vibe-performance-benchmark"),
         _article_url("fixes-sglang-restart-oom-fix"),
     )
@@ -82,6 +82,9 @@ def diagnose_sglang(
     All parameters are optional; supply only what you have. With no inputs
     you get the recommended config and a 'unknown' verdict.
     """
+    # Input-length cap to prevent DoS via huge error_message payloads
+    if len(error_message) > 10000:
+        error_message = error_message[:10000]
     sglang_url, vibe_perf_url, oom_url = _urls()
     issues: list[DiagnosticIssue] = []
     warnings: list[DiagnosticIssue] = []

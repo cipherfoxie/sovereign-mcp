@@ -24,7 +24,7 @@ class Article(BaseModel):
 
 
 def get_article(
-    slug: Annotated[str, Field(description="Article slug as returned by search_blog (e.g. 'setup-mistral-sglang-setup'). Lower-case, hyphenated.")],
+    slug: Annotated[str, Field(description="Article slug as returned by search_blog (e.g. 'setup-llm-inference-setup'). Lower-case, hyphenated.")],
 ) -> Article:
     """
     Retrieve the full content of a blog article by its slug.
