@@ -18,6 +18,7 @@ from .tools.search import search_blog
 from .tools.article import get_article
 from .tools.diagnose import diagnose_sglang
 from .tools.tags import list_tags
+from .tools.article_list import list_articles
 
 # ── MCP Server ────────────────────────────────────────────────────────────────
 # DNS rebinding protection: server binds to 127.0.0.1 inside Docker, only
@@ -28,10 +29,10 @@ mcp = FastMCP(
     instructions=(
         "Search and retrieve articles from the Sovereign AI Blog, a practical "
         "engineering log of self-hosted AI on NVIDIA DGX Spark. "
-        "Use list_tags to discover topic categories, search_blog to find "
-        "articles (with optional tag filter and date_desc sort), get_article "
-        "for full content by slug, and diagnose_sglang to validate SGLang "
-        "configs for GB10/SM121A hardware."
+        "Use list_tags to discover topic categories, list_articles to browse "
+        "all articles with pagination and sorting, search_blog for full-text "
+        "semantic search, get_article for full content by slug, and "
+        "diagnose_sglang to validate SGLang configs for GB10/SM121A hardware."
     ),
     streamable_http_path="/self-hosted-ai",
     transport_security=TransportSecuritySettings(
@@ -60,6 +61,13 @@ mcp.tool(annotations=ToolAnnotations(
     idempotentHint=True,
     openWorldHint=False,
 ))(search_blog)
+
+mcp.tool(annotations=ToolAnnotations(
+    title="List Articles",
+    readOnlyHint=True,
+    idempotentHint=True,
+    openWorldHint=False,
+))(list_articles)
 
 mcp.tool(annotations=ToolAnnotations(
     title="Get Article",
@@ -135,6 +143,7 @@ def _make_tool_endpoint(tool_fn):
 mcp.custom_route("/health", methods=["GET"])(health_endpoint)
 mcp.custom_route("/api/diagnose", methods=["POST"])(_make_tool_endpoint(diagnose_sglang))
 mcp.custom_route("/api/search", methods=["POST"])(_make_tool_endpoint(search_blog))
+mcp.custom_route("/api/list-articles", methods=["POST"])(_make_tool_endpoint(list_articles))
 mcp.custom_route("/api/tags", methods=["POST"])(_make_tool_endpoint(list_tags))
 mcp.custom_route("/api/article", methods=["POST"])(_make_tool_endpoint(get_article))
 
