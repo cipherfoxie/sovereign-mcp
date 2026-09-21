@@ -1,12 +1,12 @@
 """
 main.py — Sovereign AI MCP Server
-FastMCP app with Streamable HTTP transport.
+MCPServer (mcp 2.x) app with Streamable HTTP transport.
 MCP endpoint: POST /self-hosted-ai
 Health endpoint: GET /health (custom Starlette route added to the app)
 """
 
 import json
-from mcp.server.fastmcp import FastMCP
+from mcp.server.mcpserver import MCPServer
 from mcp.server.transport_security import TransportSecuritySettings
 from mcp.types import ToolAnnotations
 from starlette.requests import Request
@@ -24,7 +24,7 @@ from .tools.article_list import list_articles
 # DNS rebinding protection: server binds to 127.0.0.1 inside Docker, only
 # Caddy reverse-proxies internet traffic. Allow the public hostname Caddy
 # forwards as the Host header. Localhost patterns kept for healthchecks.
-mcp = FastMCP(
+mcp = MCPServer(
     name="sovereign-ai-blog",
     instructions=(
         "Search and retrieve articles from the Sovereign AI Blog, a practical "
@@ -33,21 +33,6 @@ mcp = FastMCP(
         "all articles with pagination and sorting, search_blog for full-text "
         "semantic search, get_article for full content by slug, and "
         "diagnose_sglang to validate SGLang configs for GB10/SM121A hardware."
-    ),
-    streamable_http_path="/self-hosted-ai",
-    transport_security=TransportSecuritySettings(
-        enable_dns_rebinding_protection=True,
-        allowed_hosts=[
-            "mcp.sovgrid.org",
-            "127.0.0.1:*",
-            "localhost:*",
-            "[::1]:*",
-        ],
-        allowed_origins=[
-            "https://mcp.sovgrid.org",
-            "http://127.0.0.1:*",
-            "http://localhost:*",
-        ],
     ),
 )
 
@@ -147,4 +132,20 @@ mcp.custom_route("/api/list-articles", methods=["POST"])(_make_tool_endpoint(lis
 mcp.custom_route("/api/tags", methods=["POST"])(_make_tool_endpoint(list_tags))
 mcp.custom_route("/api/article", methods=["POST"])(_make_tool_endpoint(get_article))
 
-app = mcp.streamable_http_app()
+app = mcp.streamable_http_app(
+    streamable_http_path="/self-hosted-ai",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=[
+            "mcp.sovgrid.org",
+            "127.0.0.1:*",
+            "localhost:*",
+            "[::1]:*",
+        ],
+        allowed_origins=[
+            "https://mcp.sovgrid.org",
+            "http://127.0.0.1:*",
+            "http://localhost:*",
+        ],
+    ),
+)
