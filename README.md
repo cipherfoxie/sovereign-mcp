@@ -6,6 +6,7 @@
 [![MCP Registry](https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fregistry.modelcontextprotocol.io%2Fv0%2Fservers%3Fsearch%3Dsovgrid&query=%24.servers%5B0%5D.server.version&label=MCP%20Registry&color=1f6feb&prefix=v)](https://registry.modelcontextprotocol.io/v0/servers?search=sovgrid)
 [![smithery badge](https://smithery.ai/badge/cipherfoxie/sovereign-mcp)](https://smithery.ai/servers/cipherfoxie/sovereign-mcp)
 [![Glama MCP server](https://glama.ai/mcp/servers/cipherfoxie/sovereign-mcp/badges/score.svg)](https://glama.ai/mcp/servers/cipherfoxie/sovereign-mcp)
+[![Glama connector](https://glama.ai/mcp/connectors/org.sovgrid.mcp/sovereign-ai-blog/badges/score.svg)](https://glama.ai/mcp/connectors/org.sovgrid.mcp/sovereign-ai-blog)
 [![Write-up](https://img.shields.io/badge/write--up-sovgrid.org-76b900.svg)](https://sovgrid.org/blog/setup-sovereign-mcp-setup/)
 
 MCP server exposing the [Sovereign AI Blog](https://sovgrid.org) to AI agents. The blog is a hands-on engineering log of self-hosted AI on NVIDIA DGX Spark (GB10/SM121A).
@@ -16,7 +17,7 @@ MCP server exposing the [Sovereign AI Blog](https://sovgrid.org) to AI agents. T
 
 ## Why use it
 
-Training data on niche hardware (GB10, SM121A, SGLang on ARM64) is sparse and stale. This MCP gives agents direct, structured access to 60+ articles documenting actual setups, fixes, and benchmarks. If you're building or debugging on similar stacks, your agent can pull verified, version-current information instead of hallucinating.
+Training data on niche hardware (GB10, SM121A, SGLang on ARM64) is sparse and stale. This MCP gives agents direct, structured access to 180+ articles documenting actual setups, fixes, and benchmarks. If you're building or debugging on similar stacks, your agent can pull verified, version-current information instead of hallucinating.
 
 The corpus covers SGLang and vLLM patches for GB10, voxtral and TTS pipelines on ARM64, KV-cache and quantization tradeoffs, podcast-grade audio generation, MCP server design, knowledge-base construction, and the operational side of running it all on a hardened European VPS.
 
@@ -25,6 +26,7 @@ The corpus covers SGLang and vLLM patches for GB10, voxtral and TTS pipelines on
 | Tool | Purpose |
 |------|---------|
 | `search_blog(query, tag?, sort?, n?)` | TF-IDF full-text search. Optional `tag` filter, `sort` by relevance or `date_desc`. Empty `query` lists newest articles. Returns ranked `SearchResult` items with quality score, style, slug, and excerpt. |
+| `list_articles(tag?, sort?, limit?, offset?)` | Direct article listing with pagination, no TF-IDF overhead. Filter by tag, sort by `date_desc`, `date_asc`, `title_asc`, or `quality_desc`. Returns `ArticleSummary` items. |
 | `list_tags(sort?)` | List all topic tags across the corpus with article counts. Sort by `count_desc` (default) or `alpha`. Use to discover the topic space before filtering `search_blog`. |
 | `get_article(slug)` | Fetch full article body and frontmatter by slug. Returns markdown content plus tags, quality score, publish date. |
 | `diagnose_sglang(error_message)` | Pattern-match a runtime error against a curated rule set for SGLang on GB10/SM121A. Returns matched fixes with links to setup articles. |
